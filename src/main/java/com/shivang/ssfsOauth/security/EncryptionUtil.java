@@ -2,7 +2,10 @@ package com.shivang.ssfsOauth.security;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -17,11 +20,30 @@ import org.slf4j.LoggerFactory;
 public class EncryptionUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EncryptionUtil.class);
 	
-	//hardcoding secret key for testing. This should be stored or read from secrets manager or key vault
-	private static String keyString = "MyVeryStrongSecretKeyForAES256!!";
+
+	private static final String KEY_FILE_PATH = System.getProperty("user.home") + "/.key_string"; // Path to the local key file
+    private static SecretKey key;
+
+    static {
+        try {
+            String keyString = readKeyFromFile(KEY_FILE_PATH);
+            key = new SecretKeySpec(keyString.getBytes(), "AES");
+        }
+        catch (Exception e) {
+            logger.error("Error initializing encryption key", e);
+        }
+    }
+
+    private static String readKeyFromFile(String filePath) {
+        try {
+			return new String(Files.readAllBytes(Paths.get(filePath))).trim();
+		} catch (IOException e) {
+			logger.error("Error occured while reading key file..."+e.getMessage());
+		}
+		return filePath;
+    }
 	
-	
-    private final static SecretKey key = new SecretKeySpec(keyString.getBytes(), "AES");
+    //private final static SecretKey key = new SecretKeySpec(keyString.getBytes(), "AES");
 
     public static void encryptFile(Path input, Path output) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");

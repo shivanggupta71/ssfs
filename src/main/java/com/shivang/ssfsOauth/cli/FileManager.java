@@ -5,10 +5,11 @@ import java.nio.file.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.shivang.ssfsOauth.security.EncryptionUtil;
 
-
+@Component
 public class FileManager {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileManager.class);

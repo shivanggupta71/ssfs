@@ -25,8 +25,11 @@ SFSS is a **command-line based secure file storage application** built with Java
 - Java 17 or later
 - Maven 3.x
 - GitHub OAuth App registered with:
-  - Authorization callback URL: `http://localhost:8080/oauth/callback`
+  - Authorization callback URL: `http://localhost:8000/login/oauth2/code/github`
 - GitHub OAuth Client ID and Client Secret
+- create a file .key_string inside user.home and insert a 32 byte string used for AES encryption of file.
+    
+    echo "32 character string" >.key_string
 
 ---
 
@@ -74,6 +77,8 @@ Using Maven:
 
     ./sfss-cli.sh upload /path/to/file.txt
     ./sfss-cli.sh list
+    ./sfss-cli.sh download filename.txt
+    ./sfss-cli.sh delete filename.txt
 
   Windows
   
